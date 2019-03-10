@@ -1,5 +1,5 @@
 #ActivityRecognition
-
+====  
 ActivityRecognition is an android application which can recognize uesr's activity. The user of our application could be able to:
 
 1. Our application starts with a greeting to the user with the current date and time. Then
@@ -17,6 +17,7 @@ announcing "You have just walked for 1 min, 36 seconds".
 
 
 #Environment
+-------
 Created by Android Studio 3.1.1.
 minSdkVersion 23(Android6.0).
 Author
