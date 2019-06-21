@@ -23,17 +23,14 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.android.gms.location.ActivityRecognitionResult;
 import com.google.android.gms.location.DetectedActivity;
-
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
 public class ActivityRecognizedService extends IntentService {
-
 
     public ActivityRecognizedService() {
         super("ActivityRecognizedService");
@@ -45,12 +42,10 @@ public class ActivityRecognizedService extends IntentService {
 
 
     private Global PreActivity;
-
     private SQLiteDatabase dbReader;
     private NotesDB notesDB;
     private SQLiteDatabase dbWriter;
     String content="";
-
     //String PreActivity="";
     @Override
     protected void onHandleIntent(Intent intent) {
@@ -58,7 +53,6 @@ public class ActivityRecognizedService extends IntentService {
         notesDB = new NotesDB(this);
         //dbWriter = notesDB.getWritableDatabase();
         dbReader = notesDB.getReadableDatabase();
-
 
         String activity="";
         if(ActivityRecognitionResult.hasResult(intent)) {
@@ -93,19 +87,11 @@ public class ActivityRecognizedService extends IntentService {
 
             PreActivity=(Global)getApplication();
 
-            Log.d("PreAct22",PreActivity.getPreActivity());
-
-
-
-
-
             if(!activity.equals(PreActivity.getPreActivity())) {
 
                 Cursor cursor = dbReader.query(NotesDB.TABLE_NAME,null,null,null,null,null,null);
                 cursor.moveToPosition(cursor.getCount());
                 //cursor.moveToPrevious();
-
-                System.out.println("WWEEWWEE");
                 while(cursor.moveToPrevious())
                 {
                     if(!cursor.getString(cursor.getColumnIndex(NotesDB.STIME)).isEmpty()) {
@@ -115,22 +101,16 @@ public class ActivityRecognizedService extends IntentService {
                         System.out.println("Start time: " + content);
                         Date previousdate= strToDateLong(content);
                         Date nowdate= strToDateLong(getTime());
-
-                        long diff = nowdate.getTime() - previousdate.getTime();//这样得到的差值是微秒级别
+                        long diff = nowdate.getTime() - previousdate.getTime();//Subtle level difference
                         long days = diff / (1000 * 60 * 60 * 24);
-
                         long hours = (diff-days*(1000 * 60 * 60 * 24))/(1000* 60 * 60);
                         long minutes = (diff-days*(1000 * 60 * 60 * 24)-hours*(1000* 60 * 60))/(1000* 60);
                         long seconds = (diff-days*(1000 * 60 * 60 * 24)-hours*(1000* 60 * 60)-minutes*(60*1000))/(1000);
                         if(!PreActivity.getPreActivity().equals("s"))
                         Toast.makeText(getApplicationContext(), PreActivity.getPreActivity()+" for"+hours+"hours"+minutes+"minutes"+seconds+"seconds", Toast.LENGTH_LONG).show();
-
-                        System.out.println("魔蛇之拥"+PreActivity.getPreActivity() +days+" 天"+hours+"小时"+minutes+"分"+seconds+"秒");
                         break;
                     }
                 }
-
-
 
                 if (activity.equals("Walking")) {
                     Intent intentW = new Intent(this, WalkingActivity.class);
@@ -179,7 +159,6 @@ public class ActivityRecognizedService extends IntentService {
     private void handleDetectedActivities(List<DetectedActivity> probableActivities) {
         //int A[] = new int[4];
         for( DetectedActivity activity : probableActivities ) {
-            //System.out.println(DetectedActivity.);
             switch( activity.getType() ) {
                 case DetectedActivity.IN_VEHICLE: {
                     Log.e( "ActivityRecogition", "In Vehicle: " + activity.getConfidence() );
@@ -213,11 +192,8 @@ public class ActivityRecognizedService extends IntentService {
                 }
                 case DetectedActivity.WALKING: {
                     Log.e( "ActivityRecogition", "Walking: " + activity.getConfidence() );
-                    //A[3]=activity.getConfidence();
                     if( activity.getConfidence() >= 5 ) {
-
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-
                             NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
                             Notification notification = new NotificationCompat.Builder(this, "chat")
                                     .setContentTitle("Hi")
@@ -228,9 +204,7 @@ public class ActivityRecognizedService extends IntentService {
                                     .setAutoCancel(true)
                                     .build();
                             manager.notify(1, notification);
-
                         }
-
                         System.out.println("NCCACA");
                     }
                     break;
@@ -242,34 +216,8 @@ public class ActivityRecognizedService extends IntentService {
                 }
             }
         }
-           /* int re = getMax(A);
-            String activity="";
-        switch(re){
-            case 0:
-                activity="Vehicle";
-                break;
-            case 1:
-                activity="Running";
-                break;
-            case 2:
-                activity="Still";
-                break;
-            case 3:
-                activity="Walking";
-                break;
-        } */
-        /*if(activity!=PreActivity) {
-            Intent i = new Intent(this, MainActivity.class); 你
-            i.putExtra("Result", activity);
-            startActivity(i);
-        }*/
-        //Log.d("E/ActivityRecogition",PreActivity);
-        //PreActivity=activity;
-        //TextView lblTitle=(TextView)findViewById(R.id.Activity);
-
-
     }
-
+    
     private String getTime(){
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = new Date();
@@ -296,7 +244,6 @@ public class ActivityRecognizedService extends IntentService {
             }
             i++;
         }
-
         return maxnum;
     }
 
@@ -307,7 +254,5 @@ public class ActivityRecognizedService extends IntentService {
                 NOTIFICATION_SERVICE);
         notificationManager.createNotificationChannel(channel);
     }
-
-
 
 }
