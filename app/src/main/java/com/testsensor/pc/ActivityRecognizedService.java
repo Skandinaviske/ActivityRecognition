@@ -145,10 +145,7 @@ public class ActivityRecognizedService extends IntentService {
 
             }
 
-
-            Log.d("崔果E/ActivityRecogition",PreActivity.getPreActivity());
             PreActivity.setLabel(activity);
-            Log.d("崔biE/ActivityRecogition",PreActivity.getPreActivity());
             handleDetectedActivities(result.getProbableActivities());
 
 
